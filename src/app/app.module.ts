@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 
 import { routes } from './router';
 import { App } from './app.component';
-import { AuthService, ApiService, ChatService } from './services';
+import { AuthService, ApiService } from './services';
 import { AppBar, ChatClient, About, Auth } from './ui';
 
 @NgModule({
@@ -26,8 +26,7 @@ import { AppBar, ChatClient, About, Auth } from './ui';
   ],
   providers: [
     ApiService,
-    AuthService,
-    ChatService
+    AuthService
   ],
   bootstrap: [App]
 })
