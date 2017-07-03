@@ -29,7 +29,7 @@ import * as io from 'socket.io-client';
   styles: ['']
 })
 
-export class ChatClient {
+export class ChatClient implements OnInit {
   messages = [];
   message = {
     text: '',
@@ -37,15 +37,17 @@ export class ChatClient {
   }
   socket;
 
-  constructor() {
-    this.socket = io('http://localhost:3000');
-    this.socket.on('priceUpdate', function (data) {
+  constructor() { }
+
+  ngOnInit() {
+    this.socket = io();
+    this.socket.on('new-message', function (data) {
       this.messages = data;
     }.bind(this));
   }
 
   onSubmit() {
-    console.log(this.message.text)
+    if (this.message.user === '') { this.message.user = window.localStorage.getItem('user') }
     this.socket.emit('add-message', this.message);
     this.message.text = '';
   }

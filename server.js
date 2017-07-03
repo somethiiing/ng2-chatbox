@@ -24,11 +24,13 @@ let database = {
     username: 'hello@wilsonyu.io',
     password: 'lolpassword',
   }
-}
+};
+
+let messages = [];
 
 let findUser = (db, user) => {
   return Object.keys(db).find(elem => elem === user);
-}
+};
 
 passport.use(new LocalStrategy(
   (username, password, cb) => {
@@ -89,7 +91,10 @@ io.on('connection', socket => {
     console.log('user disconnected');
   });
   socket.on('add-message', message => {
-    console.log('message:', message)
+    console.log('message:', message);
+    messages.push(message);
+    socket.emit('new-message', messages);
+    socket.broadcast.emit('new-message', messages);
   })
 });
 
