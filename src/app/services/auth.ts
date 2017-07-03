@@ -1,66 +1,65 @@
-import { Injectable } from '@angular/core'
-import { Headers, Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { CanActivate, Router } from '@angular/router';
+import { ApiService } from './api';
+import 'rxjs/Rx';
 
 @Injectable()
-export class ApiService {
-  headers: Headers = new Headers({
-    'Content-type': 'application/json',
-    Accept: 'application/json'
-  });
+export class AuthService implements CanActivate {
 
-  api_url: String = 'http://localhost:3000';
+  JWT_KEY: string = 'chat_token';
+  USER_KEY: string = 'user';
 
-  constructor(private http: Http) { }
+  constructor(
+    private router: Router,
+    private apiService: ApiService
+  ) {
+    const token = window.localStorage.getItem(this.JWT_KEY);
 
-  private getJson(resp: Response) {
-    return resp.json();
+    if (token) { this.setJwt(token) }
   }
 
-  private checkForError(resp: Response): Response {
-    if (resp.status >= 200 && resp.status < 300) {
-      return resp;
-    } else {
-      const error = new Error(resp.statusText);
-      error['response'] = resp;
-      console.error(error);
-      throw error;
+  setJwt(jwt: string) {
+    window.localStorage.setItem(this.JWT_KEY, jwt);
+    this.apiService.setHeaders({Authorization: `Bearer ${jwt}`});
+  }
+
+  setUser(user) {
+    window.localStorage.setItem(this.USER_KEY, user);
+  }
+
+  isAuthorized(): boolean {
+    return Boolean(window.localStorage.getItem(this.JWT_KEY));
+  }
+
+  canActivate(): boolean {
+    const canActivate = this.isAuthorized();
+    this.onCanActivate(canActivate);
+    return canActivate;
+  }
+
+  onCanActivate(canActivate: boolean) {
+    if (!canActivate) {
+      this.router.navigate(['auth']);
     }
   }
 
-  get(path: string): Observable<any> {
-    return this.http.get(`${this.api_url}${path}`, this.headers)
-      .map(this.checkForError)
-      .catch(err => Observable.throw(err))
-      .map(this.getJson)
+  authenticate(path, credits): Observable<any> {
+    return this.apiService.post(`/${path}`, credits)
+      .do(res => {
+        if (res.token !== null) {
+          this.setJwt(res.token);
+          this.setUser(res.data.username);
+          const data = { user: res.data.username, jwt: res.token };
+          console.log(data);
+        }
+      })
+      .map(res => res.status);
   }
 
-  post(path, data) {
-    return this.http.post(
-      `${this.api_url}${path}`,
-      JSON.stringify(data),
-      {headers: this.headers}
-    )
-      .map(this.checkForError)
-      .catch(err => Observable.throw(err))
-      .map(this.getJson);
+  signout() {
+    window.localStorage.removeItem(this.JWT_KEY);
+    this.router.navigate(['auth']);
   }
 
-  delete(path: string, data): Observable<any> {
-    const options = {
-      headers: this.headers,
-      body: data
-    };
-
-    return this.http.delete(`${this.api_url}${path}`, options)
-      .map(this.checkForError)
-      .catch(err => Observable.throw(err))
-      .map(this.getJson)
-  }
-
-  setHeaders(headers) {
-    Object.keys(headers)
-      .forEach(header => this.headers.set(header, headers[header]))
-  }
-
-};
+}

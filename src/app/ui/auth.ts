@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-// import { AuthService } from '../services';
+import { AuthService } from '../services';
 
 @Component({
   selector: 'auth',
@@ -74,7 +74,7 @@ export class Auth {
   errorMessage: string = '';
 
   constructor(
-    // private authService: AuthService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -91,17 +91,16 @@ export class Auth {
   }
 
   authenticate() {
-  //   this.authService.authenticate(this.mode, this.user)
-  //     .subscribe( res => {
-  //       console.log(res);
-  //       if (res === 'INCORRECTPASSWORD' || res === 'USERDOESNOTEXIST') {
-  //         this.errorMessage = 'Wrong username or password. Please try again.';
-  //       } else if (res === 'USEREXISTS') {
-  //         this.errorMessage = 'User already exists!';
-  //       } else if (res === 'SUCCESS' ) {
-  //         this.router.navigate([''])
-  //       }
-  //     });
+    this.authService.authenticate(this.mode, this.user)
+      .subscribe( res => {
+        if (res === 'INCORRECTPASSWORD' || res === 'USERDOESNOTEXIST') {
+          this.errorMessage = 'Wrong username or password. Please try again.';
+        } else if (res === 'USEREXISTS') {
+          this.errorMessage = 'User already exists!';
+        } else if (res === 'SUCCESS' ) {
+          this.router.navigate([''])
+        }
+      });
   }
 
 }
