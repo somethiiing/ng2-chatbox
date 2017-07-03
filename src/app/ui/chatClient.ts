@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-// import { StoreService, ApiService, ChatService } from '../services';
-// import * as io from 'socket.io-client';
+import { ApiService } from '../services';
+import * as io from 'socket.io-client';
 
 @Component({
   selector: 'chat-client',
@@ -32,15 +32,22 @@ import { Component, OnInit } from '@angular/core';
 export class ChatClient {
   messages = [];
   message = {
-    text: ''
+    text: '',
+    user: ''
   }
-  connection;
+  socket;
 
-  constructor() {}
+  constructor() {
+    this.socket = io('http://localhost:3000');
+    this.socket.on('priceUpdate', function (data) {
+      this.messages = data;
+    }.bind(this));
+  }
 
   onSubmit() {
-    // this.chatService.sendMessage(this.message);
-    // this.message.text = '';
+    console.log(this.message.text)
+    this.socket.emit('add-message', this.message);
+    this.message.text = '';
   }
 
 }

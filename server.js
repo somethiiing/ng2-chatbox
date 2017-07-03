@@ -88,7 +88,7 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
-  socket.on('message', message => {
+  socket.on('add-message', message => {
     console.log('message:', message)
   })
 });
