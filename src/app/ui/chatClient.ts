@@ -7,7 +7,7 @@ import * as io from 'socket.io-client';
   template: `
     <div class="chatClient">
       <p *ngIf="this.message.user === '' ">To begin, enter your username and hit submit!</p>
-      <div class="messageBox" *ngIf="this.message.user !== '' ">
+      <div id="messageBox" class="messageBox" *ngIf="this.message.user !== '' ">
         <p *ngFor="let message of messages">{{message.user}}: {{message.text}}</p>
       </div>
       <div class="chatInput">
