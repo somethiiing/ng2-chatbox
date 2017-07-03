@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
     <app-bar></app-bar>
-    <chat-client></chat-client>
+    <router-outlet></router-outlet>
   `,
   styles: ['']
 })

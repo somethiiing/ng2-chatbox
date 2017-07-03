@@ -5,12 +5,12 @@ import { Component } from '@angular/core';
   selector: 'app-bar',
   template: `
     <header class="app-bar middle-xs">
-      <span  class="logo row col-xs-5">
+      <span  [routerLink]="['']" class="logo row col-xs-5">
         chat.
       </span>
       <nav class="col-xs-2 navbar">
         <div class="row middle-xs between-xs">
-          <li  class="link">about</li>
+          <li [routerLink]="['about']" class="link">about</li>
           <li  class="link">signout</li>
         </div>
       </nav>
@@ -24,7 +24,4 @@ export class AppBar {
   // constructor( private authService: AuthService) { }
 }
 
-
-// [routerLink]="['']"
-// [routerLink]="['about']"
 // (click)="authService.signout()"
