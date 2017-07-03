@@ -5,12 +5,12 @@ import * as io from 'socket.io-client';
 @Component({
   selector: 'chat-client',
   template: `
-    <div>
+    <div class="chatClient">
       <p *ngIf="this.message.user === '' ">To begin, enter your username and hit submit!</p>
-      <div class="messageBox" *ngFor="let message of messages">
-        <p>{{message.user}}: {{message.text}}</p>
+      <div class="messageBox" *ngIf="this.message.user !== '' ">
+        <p *ngFor="let message of messages">{{message.user}}: {{message.text}}</p>
       </div>
-      <div>
+      <div class="chatInput">
         <form (submit)="onSubmit()">
           <input
             autocomplete="off"
@@ -34,7 +34,7 @@ import * as io from 'socket.io-client';
       </div>
     </div>
   `,
-  styles: ['']
+  styleUrls: ['chatClient.css']
 })
 
 export class ChatClient implements OnInit {
