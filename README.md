@@ -12,7 +12,7 @@
 
 ## Screenshot
 
-![chat ss](https://github.com/somethiiing/ng2-todo/blob/master/chatss1.png?raw=true)
+![chat ss](https://github.com/somethiiing/ng2-chatbox/blob/master/chatss1.png?raw=true)
 
 
 
